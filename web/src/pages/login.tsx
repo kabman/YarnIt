@@ -1,13 +1,11 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { Box, Button, Link, Flex } from "@chakra-ui/core";
+import { Box, Button, Link, Flex } from "@chakra-ui/react";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { useLoginMutation, MeQuery, MeDocument } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
 import { withApollo } from "../utils/withApollo";
 
@@ -67,8 +65,8 @@ const Login: React.FC<{}> = ({}) => {
             <Button
               mt={4}
               type="submit"
-              isLoading={isSubmitting}
-              variantColor="teal"
+              disabled={isSubmitting}
+              colorScheme="teal"
             >
               login
             </Button>

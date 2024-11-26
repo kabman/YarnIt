@@ -17,7 +17,7 @@ import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
-import { getConnection } from "typeorm";
+import { AppDataSource } from "../data-source";
 
 @ObjectType()
 class FieldError {
@@ -79,7 +79,7 @@ export class UserResolver {
     }
 
     const userIdNum = parseInt(userId);
-    const user = await User.findOne(userIdNum);
+    const user = await User.findOne({ where: { id: userIdNum } });
 
     if (!user) {
       return {
@@ -123,8 +123,8 @@ export class UserResolver {
     await redis.set(
       FORGET_PASSWORD_PREFIX + token,
       user.id,
-      "ex",
-      1000 * 60 * 60 * 24 * 3
+      "EX",
+      60 * 60 * 24 * 3
     ); // 3 days
 
     await sendEmail(
@@ -159,7 +159,7 @@ export class UserResolver {
     let user;
     try {
       // User.create({}).save()
-      const result = await getConnection()
+      const result = await AppDataSource
         .createQueryBuilder()
         .insert()
         .into(User)

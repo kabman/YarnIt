@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Redis } from "ioredis";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpdootLoader } from "./utils/createUpdootLoader";
+import { DataSource } from "typeorm";
 
 export type MyContext = {
   req: Request & { session: Express.Session };
@@ -9,4 +10,5 @@ export type MyContext = {
   res: Response;
   userLoader: ReturnType<typeof createUserLoader>;
   updootLoader: ReturnType<typeof createUpdootLoader>;
+  dataSource: DataSource;
 };

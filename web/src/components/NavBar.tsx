@@ -1,15 +1,13 @@
 import React from "react";
-import { Box, Link, Flex, Button, Heading } from "@chakra-ui/core";
+import { Box, Flex, Button, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useMeQuery, useLogoutMutation } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
-import { useRouter } from "next/router";
 import { useApolloClient } from "@apollo/client";
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-  const router = useRouter();
   const [logout, { loading: logoutFetching }] = useLogoutMutation();
   const apolloClient = useApolloClient();
   const { data, loading } = useMeQuery({
@@ -18,29 +16,15 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
   let body = null;
 
-  // data is loading
-  if (loading) {
-    // user not logged in
-  } else if (!data?.me) {
-    body = (
-      <>
-        <NextLink href="/login">
-          <Link mr={2}>login</Link>
-        </NextLink>
-        <NextLink href="/register">
-          <Link>register</Link>
-        </NextLink>
-      </>
-    );
-    // user is logged in
-  } else {
+  // Only render content if we're not loading and have data
+  if (!loading && data?.me) {
     body = (
       <Flex align="center">
-        <NextLink href="/create-post">
-          <Button as={Link} mr={4}>
-            create post
-          </Button>
-        </NextLink>
+        <Box mr={4}>
+          <NextLink href="/create-post">
+            <Button as="span">create post</Button>
+          </NextLink>
+        </Box>
         <Box mr={2}>{data.me.username}</Box>
         <Button
           onClick={async () => {
@@ -48,23 +32,35 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             await apolloClient.resetStore();
           }}
           isLoading={logoutFetching}
-          variant="link"
+          variant="ghost"
         >
           logout
         </Button>
       </Flex>
     );
+  } else {
+    // Default state (both for loading and not logged in)
+    body = (
+      <Flex>
+        <Box mr={2}>
+          <NextLink href="/login">login</NextLink>
+        </Box>
+        <Box>
+          <NextLink href="/register">register</NextLink>
+        </Box>
+      </Flex>
+    );
   }
 
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4}>
-      <Flex flex={1} m="auto" align="center" maxW={800}>
-        <NextLink href="/">
-          <Link>
-            <Heading>LiReddit</Heading>
-          </Link>
-        </NextLink>
-        <Box ml={"auto"}>{body}</Box>
+    <Flex position="sticky" top={0} zIndex={1} bg="tan" p={4}>
+      <Flex flex={1} maxW={800} align="center" m="auto">
+        <Box>
+          <NextLink href="/">
+            <Heading style={{ cursor: 'pointer' }}>YarnIt!</Heading>
+          </NextLink>
+        </Box>
+        <Box ml="auto">{body}</Box>
       </Flex>
     </Flex>
   );

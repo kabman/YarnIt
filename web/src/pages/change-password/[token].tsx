@@ -4,15 +4,13 @@ import { Wrapper } from "../../components/Wrapper";
 import { Formik, Form } from "formik";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { InputField } from "../../components/InputField";
-import { Box, Button, Link, Flex } from "@chakra-ui/core";
+import { Box, Button, Link, Flex } from "@chakra-ui/react";
 import {
   useChangePasswordMutation,
   MeDocument,
   MeQuery,
 } from "../../generated/graphql";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
 import NextLink from "next/link";
 import { withApollo } from "../../utils/withApollo";
 
@@ -76,8 +74,8 @@ const ChangePassword: NextPage = () => {
             <Button
               mt={4}
               type="submit"
-              isLoading={isSubmitting}
-              variantColor="teal"
+              disabled={isSubmitting}
+              colorScheme="teal"
             >
               change password
             </Button>

@@ -1,13 +1,11 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { Box, Button } from "@chakra-ui/core";
+import { Box, Button } from "@chakra-ui/react";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { useRegisterMutation, MeQuery, MeDocument } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 import { withApollo } from "../utils/withApollo";
 
 interface registerProps {}
@@ -61,8 +59,8 @@ const Register: React.FC<registerProps> = ({}) => {
             <Button
               mt={4}
               type="submit"
-              isLoading={isSubmitting}
-              variantColor="teal"
+              disabled={isSubmitting}
+              colorScheme="teal"
             >
               register
             </Button>
